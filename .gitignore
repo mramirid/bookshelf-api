@@ -1,0 +1,9 @@
+# npm dependencies
+node_modules
+
+# credentials
+iam_mramirid_credentials.csv
+notes-api-webserver.pem
+
+# environment variables
+.env
