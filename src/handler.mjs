@@ -88,23 +88,24 @@ export function getAllBooksHandler(request) {
   };
 }
 
-// export function getNoteByIdHandler(request, h) {
-//   const { id } = request.params;
-//   const note = notes.find((item) => item.id === id);
-//   if (note === undefined) {
-//     return h
-//       .response({
-//         status: 'fail',
-//         message: 'Catatan tidak ditemukan',
-//       })
-//       .code(constants.HTTP_STATUS_NOT_FOUND);
-//   }
+export function getBookByIdHandler(request, h) {
+  const { id } = request.params;
 
-//   return {
-//     status: 'success',
-//     data: { note },
-//   };
-// }
+  const book = books.find((item) => item.id === id);
+  if (book === undefined) {
+    return h
+      .response({
+        status: 'fail',
+        message: 'Buku tidak ditemukan',
+      })
+      .code(constants.HTTP_STATUS_NOT_FOUND);
+  }
+
+  return {
+    status: 'success',
+    data: { book },
+  };
+}
 
 // export function editNoteByIdHandler(request, h) {
 //   const { id } = request.params;
