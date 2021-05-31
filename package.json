@@ -1,5 +1,5 @@
 {
-  "name": "hapi-note-app",
+  "name": "bookshelf-api",
   "author": "mramirid",
   "type": "module",
   "engines": {
