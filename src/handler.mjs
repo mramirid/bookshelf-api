@@ -28,7 +28,14 @@ export function addBookHandler(request, h) {
   const updatedAt = insertedAt;
   const newBook = {
     id: bookId,
-    ...reqBody,
+    name: reqBody.name,
+    year: reqBody.year,
+    author: reqBody.author,
+    summary: reqBody.summary,
+    publisher: reqBody.publisher,
+    pageCount: reqBody.pageCount,
+    readPage: reqBody.readPage,
+    reading: reqBody.reading,
     finished: reqBody.pageCount === reqBody.readPage,
     insertedAt,
     updatedAt,
@@ -81,17 +88,15 @@ export function getAllBooksHandler(request) {
         id: book.id,
         name: book.name,
         publisher: book.publisher,
-        finished: book.finished,
-        reading: book.reading,
       })),
     },
   };
 }
 
 export function getBookByIdHandler(request, h) {
-  const { id } = request.params;
+  const { bookId } = request.params;
 
-  const book = books.find((item) => item.id === id);
+  const book = books.find((item) => item.id === bookId);
   if (book === undefined) {
     return h
       .response({
@@ -107,53 +112,73 @@ export function getBookByIdHandler(request, h) {
   };
 }
 
-// export function editNoteByIdHandler(request, h) {
-//   const { id } = request.params;
-//   const { title, tags, body } = request.payload;
+export function editBookByIdHandler(request, h) {
+  const { bookId } = request.params;
+  const reqBody = request.payload;
 
-//   const noteIndex = notes.findIndex((note) => note.id === id);
-//   if (noteIndex === -1) {
-//     return h
-//       .response({
-//         status: 'fail',
-//         message: 'Gagal memperbarui catatan. Id tidak ditemukan',
-//       })
-//       .code(constants.HTTP_STATUS_NOT_FOUND);
-//   }
+  if (!reqBody.name) {
+    return h
+      .response({
+        status: 'fail',
+        message: 'Gagal memperbarui buku. Mohon isi nama buku',
+      })
+      .code(constants.HTTP_STATUS_BAD_REQUEST);
+  }
+  if (reqBody.readPage > reqBody.pageCount) {
+    return h
+      .response({
+        status: 'fail',
+        message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+      })
+      .code(constants.HTTP_STATUS_BAD_REQUEST);
+  }
 
-//   notes[noteIndex] = {
-//     ...notes[noteIndex],
-//     title,
-//     tags,
-//     body,
-//     updatedAt: new Date().toISOString(),
-//   };
-//   return h
-//     .response({
-//       status: 'success',
-//       message: 'Catatan berhasil diperbarui',
-//     })
-//     .code(constants.HTTP_STATUS_OK);
-// }
+  const index = books.findIndex((book) => book.id === bookId);
+  if (index === -1) {
+    return h
+      .response({
+        status: 'fail',
+        message: 'Gagal memperbarui buku. Id tidak ditemukan',
+      })
+      .code(constants.HTTP_STATUS_NOT_FOUND);
+  }
 
-// export function deleteNoteByIdHandler(request, h) {
-//   const { id } = request.params;
+  books[index] = {
+    ...books[index],
+    name: reqBody.name,
+    year: reqBody.year,
+    author: reqBody.author,
+    summary: reqBody.summary,
+    publisher: reqBody.publisher,
+    pageCount: reqBody.pageCount,
+    readPage: reqBody.readPage,
+    reading: reqBody.reading,
+    updatedAt: new Date().toISOString(),
+  };
 
-//   const noteIndex = notes.findIndex((note) => note.id === id);
-//   if (noteIndex === -1) {
-//     return h
-//       .response({
-//         status: 'fail',
-//         message: 'Gagal memperbarui catatan. Id tidak ditemukan',
-//       })
-//       .code(constants.HTTP_STATUS_NOT_FOUND);
-//   }
+  return {
+    status: 'success',
+    message: 'Buku berhasil diperbarui',
+  };
+}
 
-//   notes.splice(noteIndex, 1);
-//   return h
-//     .response({
-//       status: 'success',
-//       message: 'Catatan berhasil dihapus',
-//     })
-//     .code(constants.HTTP_STATUS_OK);
-// }
+export function deleteBookByIdHandler(request, h) {
+  const { bookId } = request.params;
+
+  const index = books.findIndex((book) => book.id === bookId);
+  if (index === -1) {
+    return h
+      .response({
+        status: 'fail',
+        message: 'Buku gagal dihapus. Id tidak ditemukan',
+      })
+      .code(constants.HTTP_STATUS_NOT_FOUND);
+  }
+
+  books.splice(index, 1);
+
+  return {
+    status: 'success',
+    message: 'Buku berhasil dihapus',
+  };
+}

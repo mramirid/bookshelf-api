@@ -1,4 +1,10 @@
-import { addBookHandler, getAllBooksHandler, getBookByIdHandler } from './handler.mjs';
+import {
+  addBookHandler,
+  getAllBooksHandler,
+  getBookByIdHandler,
+  editBookByIdHandler,
+  deleteBookByIdHandler,
+} from './handler.mjs';
 
 const routes = [
   {
@@ -13,19 +19,19 @@ const routes = [
   },
   {
     method: 'GET',
-    path: '/books/{id}',
+    path: '/books/{bookId}',
     handler: getBookByIdHandler,
   },
-  // {
-  //   method: constants.HTTP2_METHOD_PUT,
-  //   path: '/books/{id}',
-  //   handler: editBookByIdHandler,
-  // },
-  // {
-  //   method: constants.HTTP2_METHOD_DELETE,
-  //   path: '/books/{id}',
-  //   handler: deleteBookByIdHandler,
-  // },
+  {
+    method: 'PUT',
+    path: '/books/{bookId}',
+    handler: editBookByIdHandler,
+  },
+  {
+    method: 'DELETE',
+    path: '/books/{bookId}',
+    handler: deleteBookByIdHandler,
+  },
 ];
 
 export default routes;
